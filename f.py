@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import sqlite3
 from tkinter import  messagebox
+from datetime import datetime
 #window creation
 win=tk.Tk()
 #function1
@@ -35,6 +36,7 @@ def af():
     rem=ttk.Entry(win1,  width=12,  textvariable=rem)
     rem.grid(column=2,  row=8)
     
+    
 #function
     def mf():
         unum1=number.get()
@@ -53,11 +55,12 @@ def af():
         Date.bind('<Return>',  mf)
         Time.bind('<Return>',  mf)
         rem.bind('<Return>',  mf)
+        messagebox.showinfo("Validation", "Remainder Set")
         conn.commit()
         conn.close() 
         print(conn)
     #messagebox.showwarning("Warning",  "Fruit exists")
-        messagebox.showinfo("Validation", "Remainder Set")
+      
 #adding button
     action=ttk.Button(win1, text="OK",  command=mf)
     action.grid(column=10, row=10)
@@ -148,6 +151,33 @@ def vf():
     action=ttk.Button(win3,  text="View",  command=gf)
     action.grid(column=12,  row=12)
     win3.mainloop()
+def dt():
+    win8=tk.Tk()
+    aLabel=ttk.Label(win8, text="date")
+    aLabel.grid(column=0,  row=2)
+    Date=tk.StringVar()
+    Date=ttk.Entry(win8, width=12,  textvariable=Date)
+    Date.grid(column=2,  row=2)
+    
+    def dta():
+        name1=Date.get()
+        conn=sqlite3.connect("Remainder.db")
+        cur=conn.cursor()
+        cur.execute("SELECT date('now')")
+        for row in cur.fetchone():
+            s=row
+        print(s)
+        if(name1==s):
+            messagebox.showinfo("Validation",  "Reminder Alert")
+        
+        Date.bind('<Return>', dt)
+        conn.commit()
+        conn.close()
+   
+    action=ttk.Button(win8,  text="Alert",  command=dta)
+    action.grid(column=12,  row=12) 
+    win8.mainloop()
+    
 #Button1
 action=ttk.Button(win,  text="Create Remainder",  command=af)
 action.grid(column=0,  row=0)
@@ -157,4 +187,6 @@ action.grid(column=0,  row=2)
 #Button3
 action=ttk.Button(win,  text="View Remainder",  command=vf)
 action.grid(column=0,  row=4)
+action=ttk.Button(win,  text="Alert Remainder",  command=dt)
+action.grid(column=0,  row=6)
 win.mainloop()
